@@ -23,10 +23,15 @@ function stampaMese(meseCorrente) {
     var target = $('.giorni_mese');
     target.html("");
     for (var i = 1; i <= giorniDelMese; i++) {
+        var datacomplete = moment({year: meseCorrente.year(), month: meseCorrente.month(), day: i});
         var giorniHtml = compiled ({
-            "value": i
+            "value": i,
+            "datacomplete": datacomplete.format('YYYY-MM-DD')
         });
+
+
         target.append(giorniHtml);
+
     }
 }
 
@@ -44,8 +49,16 @@ function stampaFeste(meseCorrente) {
                 "month": mese
             },
         success: function (data, state) {
-            console.log(data);
-            console.log(state);
+
+        var holidays = data["response"];
+        for (var i = 0; i < holidays.length; i++) {
+            var element = $(".giorni_mese li[data-datacomplete='"+holidays[i]["date"]+"']")
+            element.addClass("holidays");
+            element.append( " " + "-" + " "+ holidays[i]["name"]);
+
+            console.log(holidays[i]);
+        }
+
 
         },
         error: function (error) {
